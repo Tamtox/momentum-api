@@ -6,6 +6,7 @@ export type ZodValidatorOptions = {
   minLength?: number;
   maxLength?: number;
   isEmail?: boolean;
+  dateType?: 'date' | 'datetime' | 'time';
 };
 
 export const zodCreateStringValidator = (name: string, options: ZodValidatorOptions = {}) => {
@@ -43,7 +44,7 @@ export const zodCreateNumberValidator = (name: string, options: ZodValidatorOpti
   return numberValidator;
 };
 
-export const createPasswordValidator = (name: string, options: ZodValidatorOptions = {}) => {
+export const zodCreatePasswordValidator = (name: string, options: ZodValidatorOptions = {}) => {
   let passwordValidator = z.string({
     message: `${name} must be a string`,
     invalid_type_error: `${name} must be a string`,
@@ -63,4 +64,23 @@ export const createPasswordValidator = (name: string, options: ZodValidatorOptio
     },
   );
   return passwordValidator;
+};
+
+export const zodCreateDateValidator = (name: string, options: ZodValidatorOptions = {}) => {
+  if (!options.dateType) {
+    throw new Error('Date type is required');
+  }
+  let dateValidator = z.string({
+    message: `${name} must be a date`,
+    invalid_type_error: `${name} must be a date`,
+    required_error: `${name} is required`,
+  });
+  if (options.dateType === 'date') {
+    dateValidator = dateValidator.date(`${name} must have valid date format`);
+  } else if (options.dateType === 'datetime') {
+    dateValidator = dateValidator.datetime(`${name} must have valid date time format`);
+  } else {
+    dateValidator = dateValidator.time(`${name} must have valid time format`);
+  }
+  return dateValidator;
 };
