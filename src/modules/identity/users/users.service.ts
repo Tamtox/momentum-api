@@ -50,4 +50,14 @@ export class UsersService {
     await this.checkUserExists(null, userBody.email);
     // Step 3: Create the user
   }
+  async updateUser(body:any, options: RequestProcessOptions) {
+    // Step 1: Validate the request body
+    const userBody = createUserValidationSchema.parse(body);
+    // Step 2: Check if the user exists
+    // Step 3: Update the user
+  }
+  async listUsers(body: any, options: RequestProcessOptions) {
+    // Step 1: Validate the request body
+    // Step 2: List users
+  }
 }

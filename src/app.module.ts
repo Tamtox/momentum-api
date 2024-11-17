@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { ConfigModule } from '@nestjs/config';
-import { IdenityModule } from './modules/idenity/idenity.module';
+import { IdentityModule } from './modules/identity/identity.module';
 
 @Module({
   imports: [
@@ -11,7 +11,7 @@ import { IdenityModule } from './modules/idenity/idenity.module';
       isGlobal: true,
     }),
     NotificationsModule,
-    IdenityModule,
+    IdentityModule,
   ],
   controllers: [AppController],
   providers: [AppService],
