@@ -8,13 +8,15 @@ import { Pool } from 'pg';
     {
       provide: 'PG_OPTIONS',
       inject: [ConfigService],
-      useFactory: (config) => ({
-        host: config.get('SUPABASE_HOST'),
-        port: config.get('SUPABASE_PORT'),
-        name: config.get('SUPABASE_NAME'),
-        user: config.get('SUPABASE_USER'),
-        password: config.get('SUPABASE_PASSWORD'),
-      }),
+      useFactory: (config) => {
+        return {
+          host: config.get('SUPABASE_HOST'),
+          port: config.get('SUPABASE_PORT'),
+          name: config.get('SUPABASE_DB'),
+          user: config.get('SUPABASE_USER'),
+          password: config.get('SUPABASE_PASSWORD'),
+        };
+      },
     },
     {
       provide: 'PG_POOL',
