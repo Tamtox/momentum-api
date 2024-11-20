@@ -10,3 +10,4 @@ export const EMAIL_MAX = 255 as const;
 export const USERNAME_MIN = 3 as const;
 export const USERNAME_MAX = 100 as const;
 export const VERIFICATION_CODE_MIN = 6 as const;
+export const VERIFICATION_CODE_MAX = 6 as const;

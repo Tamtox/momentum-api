@@ -1,7 +1,7 @@
-version: '3'
+version: '3.9'
 services:
   postgres:
-    container_name: momentum-nestjs
+    container_name: postgres-momentum
     image: postgres:16.5
     ports:
       - "5432:5432"
@@ -14,7 +14,7 @@ services:
   pgadmin:
     links:
       - postgres:postgres
-    container_name: pgadmin-nestjs-drizzle
+    container_name: pgadmin-momentum
     image: dpage/pgadmin4:8.6
     ports:
       - "8080:80"

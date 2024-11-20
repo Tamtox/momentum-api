@@ -6,6 +6,7 @@ export type ZodValidatorOptions = {
   minLength?: number;
   maxLength?: number;
   isEmail?: boolean;
+  isUUID?: boolean;
   dateType?: 'date' | 'datetime' | 'time';
 };
 
@@ -24,6 +25,11 @@ export const zodCreateStringValidator = (name: string, options: ZodValidatorOpti
   if (options.isEmail) {
     stringValidator = stringValidator.email({
       message: `${name} must be a valid email`,
+    });
+  }
+  if(options.isUUID) {
+    return stringValidator.uuid({
+      message: `${name} must be a valid UUID`,
     });
   }
   return stringValidator;
@@ -84,3 +90,12 @@ export const zodCreateDateValidator = (name: string, options: ZodValidatorOption
   }
   return dateValidator;
 };
+
+export const zodCreateBooleanValidator = (name: string, options: ZodValidatorOptions = {}) => {
+  let booleanValidator = z.boolean({
+    message: `${name} must be a boolean`,
+    invalid_type_error: `${name} must be a boolean`,
+    required_error: `${name} is required`,
+  });
+  return booleanValidator;
+}

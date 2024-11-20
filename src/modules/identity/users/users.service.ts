@@ -4,10 +4,11 @@ import { CustomError } from 'src/common/errors/customError';
 import { User } from './models/user.models';
 import { RequestProcessOptions } from 'src/common/types/requestProcess';
 import { CreateUserDto, createUserValidationSchema } from './dtos/user.dtos';
+import { CONNECTION_POOL } from 'src/database/database.module-definition';
 
 @Injectable()
 export class UsersService {
-  @Inject('PG_POOL') private readonly pg: Pool;
+  @Inject(CONNECTION_POOL) private readonly pg: Pool;
   async getUser(id: string | null, email: string | null) {
     if (!id && !email) {
       throw new CustomError('Id or email is required', HttpStatus.BAD_REQUEST);
@@ -50,7 +51,7 @@ export class UsersService {
     await this.checkUserExists(null, userBody.email);
     // Step 3: Create the user
   }
-  async updateUser(body:any, options: RequestProcessOptions) {
+  async updateUser(body: any, options: RequestProcessOptions) {
     // Step 1: Validate the request body
     const userBody = createUserValidationSchema.parse(body);
     // Step 2: Check if the user exists

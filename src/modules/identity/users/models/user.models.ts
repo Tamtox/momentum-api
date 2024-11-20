@@ -1,9 +1,14 @@
-export class User {
-  id: string;
-  email: string;
-  username: string;
-  password: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string | null;
-}
+import { pgTable, text, uuid, timestamp } from "drizzle-orm/pg-core";
+import { sql, InferSelectModel } from "drizzle-orm";
+
+export const users = pgTable("users", {
+  id: uuid('id').primaryKey().default(sql`gen_random_uuid()`),
+  applicationId: uuid('application_id').notNull(),
+  email: text('email').notNull(),
+  username: text('username').notNull(),
+  password: text('password').notNull(),
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+})
+
+export type User = InferSelectModel<typeof users>;
