@@ -1,9 +1,14 @@
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
 import { CustomError } from 'src/common/errors/customError';
-import { User } from './models/user.models';
+import { User } from './models/users.models';
 import { RequestProcessOptions } from 'src/common/types/requestProcess';
-import { CreateUserDto, createUserValidationSchema } from './dtos/users.dtos';
+import {
+  CreateUserDto,
+  createUserValidationSchema,
+  UpdateUserDto,
+  updateUserValidationSchema,
+} from './dtos/users.dtos';
 import { CONNECTION_POOL } from 'src/database/database.module-definition';
 import { DrizzleService } from 'src/database/drizzle.service';
 import { databaseSchema } from 'src/database/database-schema';
@@ -14,6 +19,7 @@ export class UsersService {
     @Inject(CONNECTION_POOL) private readonly pg: Pool,
     private readonly drizzle: DrizzleService,
   ) {}
+  // #region Get User -------------------------------------------------------------------------------------------------------------------------
   async getUser(applicationId: string, id: string | null, email: string | null) {
     if (!id && !email) {
       throw new CustomError('Id or email is required', HttpStatus.BAD_REQUEST);
@@ -49,22 +55,54 @@ export class UsersService {
     }
     return user;
   }
+  // #endregion
+  // #region Create User -------------------------------------------------------------------------------------------------------------------------
   async createUser(body: CreateUserDto, options: RequestProcessOptions) {
+    const applicationId = options.applicationId;
+    if (!applicationId) {
+      throw new CustomError('Application Id is required', HttpStatus.BAD_REQUEST);
+    }
     // Step 1: Validate the request body
     const userBody = createUserValidationSchema.parse(body);
     // Step 2: Check if the user already exists
-    await this.checkUserExists(null, userBody.email);
+    await this.checkUserExists(applicationId, null, userBody.email);
     // Step 3: Create the user
-    const newUser = await this.drizzle.db.insert(databaseSchema.users).values({}).returning();
+    const newUser = await this.drizzle.db
+      .insert(databaseSchema.users)
+      .values({
+        applicationId,
+      })
+      .returning();
   }
-  async updateUser(body: any, options: RequestProcessOptions) {
+  // #endregion
+  // #region Update User -------------------------------------------------------------------------------------------------------------------------
+  async updateUser(body: UpdateUserDto, options: RequestProcessOptions) {
+    const applicationId = options.applicationId;
+    if (!applicationId) {
+      throw new CustomError('Application Id is required', HttpStatus.BAD_REQUEST);
+    }
     // Step 1: Validate the request body
-    const userBody = createUserValidationSchema.parse(body);
+    const userBody = updateUserValidationSchema.parse(body);
     // Step 2: Check if the user exists
+    const existingUser = await this.checkUserExists(applicationId, userBody.id, null);
     // Step 3: Update the user
+    // Check if email is already taken
+    if (userBody.email && userBody.email !== existingUser.email) {
+      await this.checkUserExists(applicationId, null, userBody.email);
+    }
   }
+  // #endregion
+  // #region Delete User -------------------------------------------------------------------------------------------------------------------------
+  async deleteUser(body: any, options: RequestProcessOptions) {
+    // Step 1: Validate the request body
+    // Step 2: Check if the user exists
+    // Step 3: Delete the user
+  }
+  // #endregion
+  // #region List Users -------------------------------------------------------------------------------------------------------------------------
   async listUsers(body: any, options: RequestProcessOptions) {
     // Step 1: Validate the request body
     // Step 2: List users
   }
+  // #endregion
 }
