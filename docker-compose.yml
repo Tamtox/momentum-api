@@ -1,4 +1,4 @@
-version: '3.9'
+name: momentum
 services:
   postgres:
     container_name: postgres-momentum

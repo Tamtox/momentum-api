@@ -3,9 +3,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { IdentityModule } from './modules/identity/identity.module';
-import { z } from 'zod';
+import { UsersModule } from './modules/users/users.module';
+import { AccessModule } from './modules/access/access.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { DatabaseModule } from './database/database.module';
+import { ApplicationsModule } from './modules/applications/applications.module';
+import { AdminsModule } from './modules/admins/admins.module';
 
 @Module({
   imports: [
@@ -35,7 +38,11 @@ import { DatabaseModule } from './database/database.module';
       },
     }),
     NotificationsModule,
-    IdentityModule,
+    UsersModule,
+    AccessModule,
+    AuthModule,
+    ApplicationsModule,
+    AdminsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
