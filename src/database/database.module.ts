@@ -2,16 +2,17 @@ import { Global, Module } from '@nestjs/common';
 import {
   ConfigurableDatabaseModule,
   CONNECTION_POOL,
+  DRIZZLE_POOL,
   DATABASE_OPTIONS,
   DatabaseOptions,
 } from './database.module-definition';
 import { Pool } from 'pg';
-import { DrizzleService } from './drizzle.service';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { databaseSchema } from './database-schema';
 
 @Global()
 @Module({
   providers: [
-    DrizzleService,
     {
       provide: CONNECTION_POOL,
       inject: [DATABASE_OPTIONS],
@@ -26,7 +27,14 @@ import { DrizzleService } from './drizzle.service';
         });
       },
     },
+    {
+      provide: DRIZZLE_POOL,
+      inject: [CONNECTION_POOL],
+      useFactory: (pool: Pool) => {
+        return drizzle(pool, { schema: databaseSchema });
+      },
+    },
   ],
-  exports: [DrizzleService, CONNECTION_POOL],
+  exports: [DRIZZLE_POOL, CONNECTION_POOL],
 })
 export class DatabaseModule extends ConfigurableDatabaseModule {}

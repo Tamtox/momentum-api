@@ -7,5 +7,6 @@ export interface DatabaseOptions {
   database: string;
 }
 export const CONNECTION_POOL = 'CONNECTION_POOL';
+export const DRIZZLE_POOL = 'DRIZZLE_POOL';
 export const { ConfigurableModuleClass: ConfigurableDatabaseModule, MODULE_OPTIONS_TOKEN: DATABASE_OPTIONS } =
   new ConfigurableModuleBuilder<DatabaseOptions>().setClassMethodName('forRoot').build();

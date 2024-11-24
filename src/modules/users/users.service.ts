@@ -1,23 +1,24 @@
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { CustomError } from 'src/common/errors/customError';
 import { User } from './models/users.models';
 import { RequestProcessOptions } from 'src/common/types/requestProcess';
 import {
   CreateUserDto,
   createUserValidationSchema,
+  ListUsersDto,
+  listUsersValidationSchema,
   UpdateUserDto,
   updateUserValidationSchema,
 } from './dtos/users.dtos';
-import { CONNECTION_POOL } from 'src/database/database.module-definition';
-import { DrizzleService } from 'src/database/drizzle.service';
-import { databaseSchema } from 'src/database/database-schema';
+import { CONNECTION_POOL, DRIZZLE_POOL } from 'src/database/database.module-definition';
 
 @Injectable()
 export class UsersService {
   constructor(
     @Inject(CONNECTION_POOL) private readonly pg: Pool,
-    private readonly drizzle: DrizzleService,
+    @Inject(DRIZZLE_POOL) private readonly drizzle: NodePgDatabase,
   ) {}
   // #region Get User -------------------------------------------------------------------------------------------------------------------------
   async getUser(applicationId: string, id: string | null, email: string | null) {
@@ -59,6 +60,7 @@ export class UsersService {
   // #region Create User -------------------------------------------------------------------------------------------------------------------------
   async createUser(body: CreateUserDto, options: RequestProcessOptions) {
     const applicationId = options.applicationId;
+    console.log(this.drizzle);
     if (!applicationId) {
       throw new CustomError('Application Id is required', HttpStatus.BAD_REQUEST);
     }
@@ -67,12 +69,6 @@ export class UsersService {
     // Step 2: Check if the user already exists
     await this.checkUserExists(applicationId, null, userBody.email);
     // Step 3: Create the user
-    const newUser = await this.drizzle.db
-      .insert(databaseSchema.users)
-      .values({
-        applicationId,
-      })
-      .returning();
   }
   // #endregion
   // #region Update User -------------------------------------------------------------------------------------------------------------------------
@@ -100,8 +96,11 @@ export class UsersService {
   }
   // #endregion
   // #region List Users -------------------------------------------------------------------------------------------------------------------------
-  async listUsers(body: any, options: RequestProcessOptions) {
+  async listUsers(queries: ListUsersDto, options: RequestProcessOptions) {
     // Step 1: Validate the request body
+    if (options.skipValidation !== true) {
+      queries = listUsersValidationSchema.parse(queries);
+    }
     // Step 2: List users
   }
   // #endregion
