@@ -4,17 +4,15 @@ import 'dotenv/config';
 
 const configService = new ConfigService();
 
-const dbCredentials = {
-  host: configService.get('POSTGRES_HOST'),
-  port: configService.get('POSTGRES_PORT'),
-  user: configService.get('POSTGRES_USER'),
-  password: configService.get('POSTGRES_PASSWORD'),
-  database: configService.get('POSTGRES_DB'),
-};
-
 export default defineConfig({
   schema: './src/database/database-schema.ts',
   out: './drizzle',
   dialect: 'postgresql',
-  dbCredentials,
+  dbCredentials: {
+    host: configService.get('AWS_POSTGRES_HOST') as unknown as string,
+    port: configService.get('AWS_POSTGRES_PORT') as unknown as number,
+    user: configService.get('AWS_POSTGRES_USER') as unknown as string,
+    password: configService.get('AWS_POSTGRES_PASSWORD') as unknown as string,
+    database: configService.get('AWS_POSTGRES_DB') as unknown as string,
+  },
 });

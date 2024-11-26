@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { NotificationsModule } from './modules/notifications/notifications.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from './modules/users/users.module';
 import { AccessModule } from './modules/access/access.module';
@@ -14,7 +13,7 @@ import { AdminsModule } from './modules/admins/admins.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      // envFilePath: '.env',
       // validationSchema: z.object({
       //   POSTGRES_HOST: z.string().min(1),
       //   POSTGRES_PORT: z.number().min(1),
@@ -24,7 +23,6 @@ import { AdminsModule } from './modules/admins/admins.module';
       // }),
     }),
     DatabaseModule,
-    NotificationsModule,
     UsersModule,
     AccessModule,
     AuthModule,

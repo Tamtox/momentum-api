@@ -1,6 +1,6 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { AllExceptionsFilter } from './common/errors/exceptionFilter';
+import { GlobalExceptionsFilter } from './common/errors/exceptionFilter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import 'dotenv/config';
 
@@ -14,7 +14,7 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
+  app.useGlobalFilters(new GlobalExceptionsFilter(app.get(HttpAdapterHost)));
   await app.listen(process.env.SERVER_PORT || 3000);
-  app.useGlobalFilters(new AllExceptionsFilter(app.get(HttpAdapterHost)));
 }
 bootstrap();

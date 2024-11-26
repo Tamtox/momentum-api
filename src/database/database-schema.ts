@@ -1,14 +1,21 @@
-import { applications } from 'src/modules/applications/models/applications.models';
-import { admins } from 'src/modules/admins/models/admins.models';
-import { tokens } from 'src/modules/auth/models/auth.models';
-import { notifications, notificationInstances } from 'src/modules/notifications/models/notifications.models';
-import { users } from 'src/modules/users/models/users.models';
+// import { applications } from 'src/modules/applications/models/applications.models';
+
+import { sql } from 'drizzle-orm';
+import { pgTable, uuid, text, timestamp } from 'drizzle-orm/pg-core';
+
+export const applications = pgTable('applications', {
+  id: uuid('id')
+    .primaryKey()
+    .default(sql`gen_random_uuid()`),
+  name: text('name').notNull(),
+  description: text('description'),
+  createdAt: timestamp('createdAt').notNull().defaultNow(),
+  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
+  createdBy: uuid('createdBy').notNull(),
+});
 
 export const databaseSchema = {
   applications,
-  admins,
-  tokens,
-  notifications,
-  notificationInstances,
-  users,
+  // admins,
+  // users,
 };
