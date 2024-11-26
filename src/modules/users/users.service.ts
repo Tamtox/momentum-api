@@ -60,7 +60,9 @@ export class UsersService {
   // #region Create User -------------------------------------------------------------------------------------------------------------------------
   async createUser(body: CreateUserDto, options: RequestProcessOptions) {
     const applicationId = options.applicationId;
-    console.log(this.drizzle);
+    const query = `SELECT * FROM users WHERE 1 = 1`;
+    const res = await this.pg.query(query);
+    console.log(res.rows);
     if (!applicationId) {
       throw new CustomError('Application Id is required', HttpStatus.BAD_REQUEST);
     }

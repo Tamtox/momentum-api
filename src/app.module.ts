@@ -14,7 +14,7 @@ import { AdminsModule } from './modules/admins/admins.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env', '.env.development'],
+      envFilePath: '.env',
       // validationSchema: z.object({
       //   POSTGRES_HOST: z.string().min(1),
       //   POSTGRES_PORT: z.number().min(1),
@@ -23,20 +23,7 @@ import { AdminsModule } from './modules/admins/admins.module';
       //   POSTGRES_DB: z.string().min(1),
       // }),
     }),
-    DatabaseModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const config = {
-          host: configService.get('POSTGRES_HOST'),
-          port: configService.get('POSTGRES_PORT'),
-          user: configService.get('POSTGRES_USER'),
-          password: configService.get('POSTGRES_PASSWORD'),
-          database: configService.get('POSTGRES_DB'),
-        };
-        return config;
-      },
-    }),
+    DatabaseModule,
     NotificationsModule,
     UsersModule,
     AccessModule,

@@ -9,13 +9,14 @@ import { Pool } from 'pg';
       provide: 'PG_OPTIONS',
       inject: [ConfigService],
       useFactory: (config) => {
-        return {
-          host: config.get('SUPABASE_HOST'),
-          port: config.get('SUPABASE_PORT'),
-          name: config.get('SUPABASE_DB'),
-          user: config.get('SUPABASE_USER'),
-          password: config.get('SUPABASE_PASSWORD'),
+        const databaseOptions = {
+          host: config.get('AWS_POSTGRES_HOST'),
+          port: config.get('AWS_POSTGRES_PORT'),
+          user: config.get('AWS_POSTGRES_USER'),
+          password: config.get('AWS_POSTGRES_PASSWORD'),
+          database: config.get('AWS_POSTGRES_DB'),
         };
+        return databaseOptions;
       },
     },
     {
@@ -25,7 +26,7 @@ import { Pool } from 'pg';
         new Pool({
           host: options.host,
           port: options.port,
-          database: options.name,
+          database: options.database,
           user: options.user,
           password: options.password,
         }),
