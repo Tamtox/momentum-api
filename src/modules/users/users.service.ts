@@ -92,6 +92,9 @@ export class UsersService {
     }
   }
   // #endregion
+  // # region Disable User -----------------------------------------------------------------------------------------------------------------------
+  async disableUser(body: any, options: RequestProcessOptions) {}
+  // #endregion
   // #region Delete User -------------------------------------------------------------------------------------------------------------------------
   async deleteUser(body: any, options: RequestProcessOptions) {
     // Step 1: Validate the request body
