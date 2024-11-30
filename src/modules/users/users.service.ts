@@ -13,7 +13,6 @@ import {
   updateUserValidationSchema,
 } from './dtos/users.dtos';
 import { CONNECTION_POOL, DRIZZLE_POOL } from 'src/database/database.module-definition';
-import { applications } from 'src/database/database-schema';
 
 @Injectable()
 export class UsersService {
@@ -61,10 +60,6 @@ export class UsersService {
   // #region Create User -------------------------------------------------------------------------------------------------------------------------
   async createUser(body: CreateUserDto, options: RequestProcessOptions) {
     const applicationId = options.applicationId;
-    const query = `SELECT * FROM applications WHERE 1 = 1`;
-    const applicationsTableQuery =
-      'CREATE TABLE IF NOT EXISTS applications (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), name TEXT NOT NULL, description TEXT, created_at TIMESTAMP NOT NULL DEFAULT NOW(), updated_at TIMESTAMP NOT NULL DEFAULT NOW(), created_by UUID NOT NULL)';
-    const res = await this.pg.query(query);
     if (!applicationId) {
       throw new CustomError('Application Id is required', HttpStatus.BAD_REQUEST);
     }
@@ -105,7 +100,7 @@ export class UsersService {
   // #region List Users -------------------------------------------------------------------------------------------------------------------------
   async listUsers(queries: ListUsersDto, options: RequestProcessOptions) {
     // Step 1: Validate the request body
-    if (options.skipValidation !== true) {
+    if (options.skipValidationCheck !== true) {
       queries = listUsersValidationSchema.parse(queries);
     }
     // Step 2: List users

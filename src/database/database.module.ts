@@ -8,23 +8,24 @@ import {
 } from './database.module-definition';
 import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { databaseSchema } from './database-schema';
+import { databaseSchema } from './schema/_index';
 import { ConfigService } from '@nestjs/config';
 // import dotenv
 
 @Global()
 @Module({
   providers: [
+    // Pg options
     {
       provide: 'PG_OPTIONS',
       inject: [ConfigService],
       useFactory: (config) => {
         const databaseOptions = {
-          host: config.get('AWS_POSTGRES_HOST'),
-          port: config.get('AWS_POSTGRES_PORT'),
-          user: config.get('AWS_POSTGRES_USER'),
-          password: config.get('AWS_POSTGRES_PASSWORD'),
-          database: config.get('AWS_POSTGRES_DB'),
+          host: config.get('SUPABASE_POSTGRES_HOST'),
+          port: config.get('SUPABASE_POSTGRES_PORT'),
+          user: config.get('SUPABASE_POSTGRES_USER'),
+          password: config.get('SUPABASE_POSTGRES_PASSWORD'),
+          database: config.get('SUPABASE_POSTGRES_DB'),
         };
         return databaseOptions;
       },

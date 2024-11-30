@@ -4,12 +4,12 @@ import { sql, InferSelectModel, desc } from 'drizzle-orm';
 export const applications = pgTable('applications', {
   id: uuid('id')
     .primaryKey()
-    .default(sql`gen_random_uuid()`),
+    .default(sql`uuid_generate_v7()`),
   name: text('name').notNull(),
   description: text('description'),
-  createdAt: timestamp('createdAt').notNull().defaultNow(),
-  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
-  createdBy: uuid('createdBy').notNull(),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at').notNull().defaultNow(),
+  created_by: uuid('created_by').notNull(),
 });
 
 export type Application = InferSelectModel<typeof applications>;

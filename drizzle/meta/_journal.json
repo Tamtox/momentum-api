@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1732621174159,
-      "tag": "0000_generate-tables",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1732624153197,
-      "tag": "0001_generate-applications-table",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1732625388318,
-      "tag": "0002_generate-applications-table-3",
+      "when": 1732880406624,
+      "tag": "0000_applications-1",
       "breakpoints": true
     }
   ]

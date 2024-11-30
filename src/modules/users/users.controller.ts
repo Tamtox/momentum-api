@@ -1,8 +1,10 @@
-import { Body, Controller, Get, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Patch, Post, Query, Req, Res } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { API_PREFIX } from 'src/common/constants/constants';
 import { CreateUserDto, ListUsersDto, UpdateUserDto } from './dtos/users.dtos';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { RequestProcessOptions } from 'src/common/types/requestProcess';
+import { Request, Response } from 'express';
 
 const CONTROLLER_NAME = 'users' as const;
 const TAGS = ['users'] as const;
@@ -20,9 +22,19 @@ export class UsersController {
   // #region Create User ----------------------------------------------------------------------------------------------------------------
   @ApiResponse({ status: HttpStatus.CREATED })
   @Post()
-  async createUser(@Body() body: CreateUserDto) {
+  async createUser(@Body() body: CreateUserDto, @Req() req: Request, @Res() res: Response) {
     const routeName = 'createUser';
-    const user = await this.usersService.createUser(body, { applicationId: 'application123' });
+    const locals = res.locals;
+    const options = new RequestProcessOptions({
+      applicationId: res.locals.applicationId,
+      skipAccessCheck: res.locals.admin ? true : false,
+      skipAuthCheck: res.locals.admin ? true : false,
+      skipValidationCheck: false,
+      user: res.locals.user,
+      admin: res.locals.admin,
+    });
+    const user = await this.usersService.createUser(body, options);
+    return res.status(HttpStatus.CREATED).json({ user });
   }
   // #endregion
   // #region Update User ----------------------------------------------------------------------------------------------------------------
@@ -37,7 +49,6 @@ export class UsersController {
   @Get()
   async listUsers(@Query() query: ListUsersDto) {
     const routeName = 'listUsers';
-    const users = await this.usersService.listUsers(query, {});
   }
   // #endregion
 }
