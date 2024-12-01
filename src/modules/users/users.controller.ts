@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpStatus, Param, Patch, Post, Query, Req, Res 
 import { UsersService } from './users.service';
 import { API_PREFIX } from 'src/common/constants/constants';
 import { CreateUserDto, ListUsersDto, UpdateUserDto } from './dtos/users.dtos';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequestProcessOptions } from 'src/common/types/requestProcess';
 import { Request, Response } from 'express';
 
@@ -20,7 +20,7 @@ export class UsersController {
   }
   // #endregion
   // #region Create User ----------------------------------------------------------------------------------------------------------------
-  @ApiResponse({ status: HttpStatus.CREATED })
+  @ApiResponse({ status: HttpStatus.CREATED, type: '' })
   @Post()
   async createUser(@Body() body: CreateUserDto, @Req() req: Request, @Res() res: Response) {
     const routeName = 'createUser';

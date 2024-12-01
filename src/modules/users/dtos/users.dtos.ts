@@ -9,16 +9,15 @@ import {
   VERIFICATION_CODE_MAX,
   VERIFICATION_CODE_MIN,
 } from 'src/common/constants/constants';
-import { extendApi, generateSchema, extendZodWithOpenApi } from '@anatine/zod-openapi';
 import { zodPaginationValidationSchema } from 'src/common/validation/zod/commonSchemas';
 import { zodCreateBooleanValidator, zodCreateStringValidator } from 'src/common/validation/zod/validatiorFunctions';
+import { createZodDto } from '@anatine/zod-nestjs';
+import { extendApi } from '@anatine/zod-openapi';
 import { z } from 'zod';
 
-extendZodWithOpenApi(z);
-
-// #region Create User
-export const createUserValidationSchema = z
-  .object(
+// #region Create User ---------------------------------------------------------------------------------------------------------------------
+export const createUserValidationSchema = extendApi(
+  z.object(
     {
       email: zodCreateStringValidator('Email', { minLength: EMAIL_MIN, maxLength: EMAIL_MAX, isEmail: true }),
       username: zodCreateStringValidator('Username', { minLength: STRING_MIN, maxLength: STRING_SHORT_MAX }),
@@ -36,40 +35,50 @@ export const createUserValidationSchema = z
       invalid_type_error: 'Create user data must be an object',
       required_error: 'Create user data is required',
     },
-  )
-  .openapi({
-    title: 'Create User',
-    description: 'Create a new user',
-  });
-export type CreateUserDto = z.infer<typeof createUserValidationSchema>;
-export const openapiCreateUserSchema = generateSchema(createUserValidationSchema);
-// #endregion
-
-// #region Update User
-export const updateUserValidationSchema = z.object(
+  ),
   {
-    id: zodCreateStringValidator('Id', { isUUID: true }),
-    email: zodCreateStringValidator('Email', { minLength: EMAIL_MIN, maxLength: EMAIL_MAX, isEmail: true }).optional(),
-    username: zodCreateStringValidator('Username', { minLength: STRING_MIN, maxLength: STRING_SHORT_MAX }).optional(),
-    password: z.string().min(PASS_MIN).max(PASS_MAX).optional(),
-    givenName: zodCreateStringValidator('Given name', { minLength: STRING_MIN, maxLength: STRING_MAX }).nullish(),
-    middleName: zodCreateStringValidator('Middle name', { minLength: STRING_MIN, maxLength: STRING_MAX }).nullish(),
-    familyName: zodCreateStringValidator('Family name', { minLength: STRING_MIN, maxLength: STRING_MAX }).nullish(),
-    isVerified: zodCreateBooleanValidator('Is verified').optional(),
-    verificationCode: zodCreateStringValidator('Verification code', {
-      minLength: VERIFICATION_CODE_MIN,
-      maxLength: VERIFICATION_CODE_MAX,
-    }).optional(),
-  },
-  {
-    invalid_type_error: 'Update user data must be an object',
-    required_error: 'Update user data is required',
+    title: 'Create User Body',
+    description: 'Create user body',
   },
 );
-export type UpdateUserDto = z.infer<typeof updateUserValidationSchema>;
+export class CreateUserDto extends createZodDto(createUserValidationSchema) {}
 // #endregion
 
-// #region List Users
+// #region Update User ---------------------------------------------------------------------------------------------------------------------
+export const updateUserValidationSchema = extendApi(
+  z.object(
+    {
+      id: zodCreateStringValidator('Id', { isUUID: true }),
+      email: zodCreateStringValidator('Email', {
+        minLength: EMAIL_MIN,
+        maxLength: EMAIL_MAX,
+        isEmail: true,
+      }).optional(),
+      username: zodCreateStringValidator('Username', { minLength: STRING_MIN, maxLength: STRING_SHORT_MAX }).optional(),
+      password: z.string().min(PASS_MIN).max(PASS_MAX).optional(),
+      givenName: zodCreateStringValidator('Given name', { minLength: STRING_MIN, maxLength: STRING_MAX }).nullish(),
+      middleName: zodCreateStringValidator('Middle name', { minLength: STRING_MIN, maxLength: STRING_MAX }).nullish(),
+      familyName: zodCreateStringValidator('Family name', { minLength: STRING_MIN, maxLength: STRING_MAX }).nullish(),
+      isVerified: zodCreateBooleanValidator('Is verified').optional(),
+      verificationCode: zodCreateStringValidator('Verification code', {
+        minLength: VERIFICATION_CODE_MIN,
+        maxLength: VERIFICATION_CODE_MAX,
+      }).optional(),
+    },
+    {
+      invalid_type_error: 'Update user data must be an object',
+      required_error: 'Update user data is required',
+    },
+  ),
+  {
+    title: 'Update User Body',
+    description: 'Update user body',
+  },
+);
+export class UpdateUserDto extends createZodDto(updateUserValidationSchema) {}
+// #endregion
+
+// #region List Users ---------------------------------------------------------------------------------------------------------------------
 export const listUsersValidationSchema = z
   .object(
     {

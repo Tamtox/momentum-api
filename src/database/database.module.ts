@@ -8,7 +8,7 @@ import {
 } from './database.module-definition';
 import { Pool } from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { databaseSchema } from './schema/_index';
+import { databaseSchema } from './schema';
 import { ConfigService } from '@nestjs/config';
 // import dotenv
 

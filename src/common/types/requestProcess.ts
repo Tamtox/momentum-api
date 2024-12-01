@@ -1,5 +1,5 @@
 import { Admin } from 'src/modules/admins/models/admins.models';
-import { User } from 'src/modules/users/models/users.models';
+import { User } from 'src/modules/users/models/users.model';
 
 export type RequestProcessOptionsParams = {
   skipValidationCheck?: boolean;

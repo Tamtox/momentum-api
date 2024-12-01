@@ -1,10 +1,10 @@
 import { pgTable, text, uuid, timestamp } from 'drizzle-orm/pg-core';
-import { sql, InferSelectModel, desc } from 'drizzle-orm';
+import { sql, InferSelectModel } from 'drizzle-orm';
 
 export const applications = pgTable('applications', {
   id: uuid('id')
     .primaryKey()
-    .default(sql`uuid_generate_v7()`),
+    .default(sql`gen_random_uuid()`),
   name: text('name').notNull(),
   description: text('description'),
   created_at: timestamp('created_at').notNull().defaultNow(),

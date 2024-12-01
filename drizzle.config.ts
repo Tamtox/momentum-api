@@ -5,7 +5,7 @@ import 'dotenv/config';
 const configService = new ConfigService();
 
 export default defineConfig({
-  schema: './src/database/schema/_index.ts',
+  schema: ['./src/**/*.model.ts'],
   out: './drizzle',
   dialect: 'postgresql',
   dbCredentials: {

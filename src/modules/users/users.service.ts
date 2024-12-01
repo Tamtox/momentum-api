@@ -2,7 +2,7 @@ import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { CustomError } from 'src/common/errors/customError';
-import { User } from './models/users.models';
+import { User } from './models/users.model';
 import { RequestProcessOptions } from 'src/common/types/requestProcess';
 import {
   CreateUserDto,
@@ -68,6 +68,13 @@ export class UsersService {
     // Step 2: Check if the user already exists
     await this.checkUserExists(applicationId, null, userBody.email);
     // Step 3: Create the user
+  }
+  // #endregion
+  // #region Create User Process -----------------------------------------------------------------------------------------------------------------
+  async createUserProcess(body: CreateUserDto, options: RequestProcessOptions) {
+    // Step 1: Create the user
+    await this.createUser(body, options);
+    // Step 2: Send email
   }
   // #endregion
   // #region Update User -------------------------------------------------------------------------------------------------------------------------
