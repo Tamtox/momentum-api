@@ -10,10 +10,17 @@ import {
   VERIFICATION_CODE_MIN,
 } from 'src/common/constants/constants';
 import { zodPaginationValidationSchema } from 'src/common/validation/zod/commonSchemas';
-import { zodCreateBooleanValidator, zodCreateStringValidator } from 'src/common/validation/zod/validatiorFunctions';
+import {
+  zodCreateBooleanValidator,
+  zodCreateDateValidator,
+  zodCreateEnumValidator,
+  zodCreateStringValidator,
+} from 'src/common/validation/zod/validatiorFunctions';
 import { createZodDto } from '@anatine/zod-nestjs';
 import { extendApi } from '@anatine/zod-openapi';
 import { z } from 'zod';
+import { zodQueryArrayToStringArrayPreprocessor } from 'src/common/validation/zod/preprocessors';
+import { USER_TYPES } from '../constants/users.constants';
 
 // #region Create User ---------------------------------------------------------------------------------------------------------------------
 export const createUserValidationSchema = extendApi(
@@ -22,6 +29,8 @@ export const createUserValidationSchema = extendApi(
       email: zodCreateStringValidator('Email', { minLength: EMAIL_MIN, maxLength: EMAIL_MAX, isEmail: true }),
       username: zodCreateStringValidator('Username', { minLength: STRING_MIN, maxLength: STRING_SHORT_MAX }),
       password: z.string().min(PASS_MIN).max(PASS_MAX),
+      temporaryPassword: z.string().min(PASS_MIN).max(PASS_MAX).optional(),
+      type: zodCreateEnumValidator('Type', USER_TYPES).optional(),
       givenName: zodCreateStringValidator('Given name', { minLength: STRING_MIN, maxLength: STRING_MAX }).optional(),
       middleName: zodCreateStringValidator('Middle name', { minLength: STRING_MIN, maxLength: STRING_MAX }).optional(),
       familyName: zodCreateStringValidator('Family name', { minLength: STRING_MIN, maxLength: STRING_MAX }).optional(),
@@ -82,7 +91,16 @@ export class UpdateUserDto extends createZodDto(updateUserValidationSchema) {}
 export const listUsersValidationSchema = z
   .object(
     {
-      id: zodCreateStringValidator('Id', { isUUID: true }).optional(),
+      ids: z
+        .preprocess(zodQueryArrayToStringArrayPreprocessor, z.array(zodCreateStringValidator('Id', { isUUID: true })))
+        .optional(),
+      excludedIds: z.array(zodCreateStringValidator('Id', { isUUID: true })).optional(),
+      createdAtStart: zodCreateDateValidator('Created at start').optional(),
+      createdAtEnd: zodCreateDateValidator('Created at end').optional(),
+      updatedAtStart: zodCreateDateValidator('Updated at start').optional(),
+      updatedAtEnd: zodCreateDateValidator('Updated at end').optional(),
+      createdBy: z.array(zodCreateStringValidator('Created by', { isUUID: true })).optional(),
+      excludeCreatedBy: z.array(zodCreateStringValidator('Exclude created by', { isUUID: true })).optional(),
     },
     {
       invalid_type_error: 'List users data must be an object',

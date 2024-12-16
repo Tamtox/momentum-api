@@ -8,9 +8,9 @@ export const admins = pgTable('admins', {
   email: text('email').notNull(),
   username: text('username').notNull(),
   password: text('password').notNull(),
-  createdAt: timestamp('createdAt').notNull().defaultNow(),
-  updatedAt: timestamp('updatedAt').notNull().defaultNow(),
-  createdBy: uuid('createdBy').notNull(),
+  created_at: timestamp('created_at').notNull().defaultNow(),
+  updated_at: timestamp('updated_at').notNull().defaultNow(),
+  created_by: uuid('created_by').notNull(),
 });
 
 export type Admin = InferSelectModel<typeof admins>;

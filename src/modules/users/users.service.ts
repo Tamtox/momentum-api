@@ -1,8 +1,5 @@
-import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { Pool } from 'pg';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { CustomError } from 'src/common/errors/customError';
-import { User } from './models/users.model';
 import { RequestProcessOptions } from 'src/common/types/requestProcess';
 import {
   CreateUserDto,
@@ -12,100 +9,91 @@ import {
   UpdateUserDto,
   updateUserValidationSchema,
 } from './dtos/users.dtos';
-import { CONNECTION_POOL, DRIZZLE_POOL } from 'src/database/database.module-definition';
+import { CreateUserData } from './types/users.types';
+import { UsersRepositoryService } from './users-repository.service';
+import { generateVerificationCode } from 'src/common/utils/generate_verification_code';
+import { VERIFICATION_CODE_MIN } from 'src/common/constants/constants';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @Inject(CONNECTION_POOL) private readonly pg: Pool,
-    @Inject(DRIZZLE_POOL) private readonly drizzle: NodePgDatabase,
-  ) {}
-  // #region Get User -------------------------------------------------------------------------------------------------------------------------
-  async getUser(applicationId: string, id: string | null, email: string | null) {
+  constructor(private readonly usersRepository: UsersRepositoryService) {}
+  // #region Check User Exists ------------------------------------------------------------------------------------------------------------------
+  async checkUserExists(id: string | null, email: string | null) {
     if (!id && !email) {
-      throw new CustomError('Id or email is required', HttpStatus.BAD_REQUEST);
+      throw new CustomError('Id or email is required', HttpStatus.BAD_REQUEST, 'Validation error');
     }
-    let query = `SELECT * FROM users WHERE application_id = $1`;
-    if (id) {
-      query += ` AND id = $1`;
-    }
-    if (email) {
-      query += ` AND email = $2`;
-    }
-    const vals: string[] = [applicationId];
-    if (id) {
-      vals.push(id);
-    }
-    if (email) {
-      vals.push(email);
-    }
-    const { rows } = await this.pg.query(query, vals);
-    let user: User | null = null;
-    if (rows.length) {
-      user = rows[0];
-    }
-    return user;
-  }
-  async checkUserExists(applicationId: string, id: string | null, email: string | null) {
-    if (!id && !email) {
-      throw new CustomError('Id or email is required', HttpStatus.BAD_REQUEST);
-    }
-    const user = await this.getUser(applicationId, id, email);
+    const user = await this.usersRepository.getUser(id, email);
     if (!user) {
-      throw new CustomError('User does not exist', HttpStatus.NOT_FOUND);
+      throw new CustomError('User does not exist', HttpStatus.NOT_FOUND, 'Validation error');
     }
     return user;
   }
   // #endregion
   // #region Create User -------------------------------------------------------------------------------------------------------------------------
-  async createUser(body: CreateUserDto, options: RequestProcessOptions) {
+  async createUserProcess(body: CreateUserDto, options: RequestProcessOptions) {
+    const processName = 'createUserProcess';
     const applicationId = options.applicationId;
-    if (!applicationId) {
-      throw new CustomError('Application Id is required', HttpStatus.BAD_REQUEST);
-    }
+    // if (!applicationId) {
+    //   throw new CustomError('Application Id is required', HttpStatus.BAD_REQUEST, 'Validation error');
+    // }
+    const admin = options.admin;
     // Step 1: Validate the request body
     const userBody = createUserValidationSchema.parse(body);
     // Step 2: Check if the user already exists
-    await this.checkUserExists(applicationId, null, userBody.email);
+    const existingUser = await this.usersRepository.getUser(null, userBody.email);
+    if (existingUser) {
+      throw new CustomError('User already exists', HttpStatus.BAD_REQUEST, 'Validation error');
+    }
     // Step 3: Create the user
-  }
-  // #endregion
-  // #region Create User Process -----------------------------------------------------------------------------------------------------------------
-  async createUserProcess(body: CreateUserDto, options: RequestProcessOptions) {
-    // Step 1: Create the user
-    await this.createUser(body, options);
-    // Step 2: Send email
+    const userData: CreateUserData = {
+      email: userBody.email,
+      username: userBody.username,
+      password: userBody.password,
+      temporary_password: null,
+      verification_code: generateVerificationCode(VERIFICATION_CODE_MIN),
+      type: userBody.type || 'user',
+    };
+    if (admin) {
+      if (body.isVerified !== undefined) {
+        userData.is_verified = true;
+      }
+      if (body.verificationCode) {
+        userData.verification_code = body.verificationCode;
+      }
+      if (body.temporaryPassword) {
+        userData.temporary_password = body.temporaryPassword;
+      }
+      userData.created_by = admin.id;
+    }
+    const user = await this.usersRepository.createUser(userData);
+    // Step 4: Send verification email
+    return user;
   }
   // #endregion
   // #region Update User -------------------------------------------------------------------------------------------------------------------------
-  async updateUser(body: UpdateUserDto, options: RequestProcessOptions) {
-    const applicationId = options.applicationId;
-    if (!applicationId) {
-      throw new CustomError('Application Id is required', HttpStatus.BAD_REQUEST);
-    }
+  async updateUserProcess(body: UpdateUserDto, options: RequestProcessOptions) {
     // Step 1: Validate the request body
     const userBody = updateUserValidationSchema.parse(body);
     // Step 2: Check if the user exists
-    const existingUser = await this.checkUserExists(applicationId, userBody.id, null);
-    // Step 3: Update the user
-    // Check if email is already taken
+    const existingUser = await this.checkUserExists(userBody.id, null);
+    // Step 3: Check if email is already taken
     if (userBody.email && userBody.email !== existingUser.email) {
-      await this.checkUserExists(applicationId, null, userBody.email);
+      await this.checkUserExists(null, userBody.email);
     }
   }
   // #endregion
   // # region Disable User -----------------------------------------------------------------------------------------------------------------------
-  async disableUser(body: any, options: RequestProcessOptions) {}
+  async disableUserProcess(body: any, options: RequestProcessOptions) {}
   // #endregion
   // #region Delete User -------------------------------------------------------------------------------------------------------------------------
-  async deleteUser(body: any, options: RequestProcessOptions) {
+  async deleteUserProcess(body: any, options: RequestProcessOptions) {
     // Step 1: Validate the request body
     // Step 2: Check if the user exists
     // Step 3: Delete the user
   }
   // #endregion
   // #region List Users -------------------------------------------------------------------------------------------------------------------------
-  async listUsers(queries: ListUsersDto, options: RequestProcessOptions) {
+  async listUsersProcess(queries: ListUsersDto, options: RequestProcessOptions) {
     // Step 1: Validate the request body
     if (options.skipValidationCheck !== true) {
       queries = listUsersValidationSchema.parse(queries);

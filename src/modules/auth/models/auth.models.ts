@@ -6,8 +6,8 @@ export const tokens = pgTable('tokens', {
   token: text('token').notNull(),
   user_id: uuid('user_id').notNull(),
   created_at: timestamp('created_at').notNull().defaultNow(),
-  valid_until: timestamp('valid_until').notNull(),
   updated_at: timestamp('updated_at').notNull().defaultNow(),
+  valid_until: timestamp('valid_until').notNull(),
 });
 
 export type Admin = InferSelectModel<typeof tokens>;

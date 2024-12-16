@@ -6,7 +6,6 @@ import { UsersModule } from './modules/users/users.module';
 import { AccessModule } from './modules/access/access.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { DatabaseModule } from './database/database.module';
-import { ApplicationsModule } from './modules/applications/applications.module';
 import { AdminsModule } from './modules/admins/admins.module';
 
 @Module({
@@ -26,7 +25,6 @@ import { AdminsModule } from './modules/admins/admins.module';
     UsersModule,
     AccessModule,
     AuthModule,
-    ApplicationsModule,
     AdminsModule,
   ],
   controllers: [AppController],

@@ -1,6 +1,7 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { z } from 'zod';
+import { CustomError } from './customError';
 
 @Catch()
 export class GlobalExceptionsFilter implements ExceptionFilter {
@@ -26,6 +27,12 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
       };
       responseBody.statusCode = HttpStatus.BAD_REQUEST;
       responseBody.type = 'Validation error';
+    } else if (exception instanceof CustomError) {
+      responseBody.details = {
+        message: exception.message,
+      };
+      responseBody.statusCode = exception.statusCode;
+      responseBody.type = exception.type;
     }
     response.status(responseBody.statusCode).json(responseBody);
   }

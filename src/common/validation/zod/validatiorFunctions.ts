@@ -27,7 +27,7 @@ export const zodCreateStringValidator = (name: string, options: ZodValidatorOpti
       message: `${name} must be a valid email`,
     });
   }
-  if(options.isUUID) {
+  if (options.isUUID) {
     return stringValidator.uuid({
       message: `${name} must be a valid UUID`,
     });
@@ -72,18 +72,16 @@ export const zodCreatePasswordValidator = (name: string, options: ZodValidatorOp
   return passwordValidator;
 };
 
-export const zodCreateDateValidator = (name: string, options: ZodValidatorOptions = {}) => {
-  if (!options.dateType) {
-    throw new Error('Date type is required');
-  }
+export const zodCreateDateValidator = (name: string, options?: { dateType?: 'date' | 'datetime' | 'time' }) => {
+  let dateType = options?.dateType || 'datetime';
   let dateValidator = z.string({
     message: `${name} must be a date`,
     invalid_type_error: `${name} must be a date`,
     required_error: `${name} is required`,
   });
-  if (options.dateType === 'date') {
+  if (dateType === 'date') {
     dateValidator = dateValidator.date(`${name} must have valid date format`);
-  } else if (options.dateType === 'datetime') {
+  } else if (dateType === 'datetime') {
     dateValidator = dateValidator.datetime(`${name} must have valid date time format`);
   } else {
     dateValidator = dateValidator.time(`${name} must have valid time format`);
@@ -98,4 +96,13 @@ export const zodCreateBooleanValidator = (name: string, options: ZodValidatorOpt
     required_error: `${name} is required`,
   });
   return booleanValidator;
-}
+};
+export const zodCreateEnumValidator = (name: string, values: readonly string[]) => {
+  // @ts-ignore-next-line
+  let enumValidator = z.enum(values, {
+    message: `${name} must be one of ${values.join(', ')}`,
+    invalid_enum_error: `${name} must be one of ${values.join(', ')}`,
+    required_error: `${name} is required`,
+  });
+  return enumValidator;
+};

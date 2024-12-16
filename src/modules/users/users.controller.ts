@@ -7,7 +7,7 @@ import { RequestProcessOptions } from 'src/common/types/requestProcess';
 import { Request, Response } from 'express';
 
 const CONTROLLER_NAME = 'users' as const;
-const TAGS = ['users'] as const;
+const TAGS = [CONTROLLER_NAME] as const;
 @ApiTags(...TAGS)
 @Controller(`${API_PREFIX}/${CONTROLLER_NAME}`)
 export class UsersController {
@@ -33,7 +33,8 @@ export class UsersController {
       user: res.locals.user,
       admin: res.locals.admin,
     });
-    const user = await this.usersService.createUser(body, options);
+    console.log('options', options);
+    const user = await this.usersService.createUserProcess(body, options);
     return res.status(HttpStatus.CREATED).json({ user });
   }
   // #endregion

@@ -1,6 +1,5 @@
-import { pgTable, text, uuid, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, timestamp } from 'drizzle-orm/pg-core';
 import { sql, InferSelectModel } from 'drizzle-orm';
-import { applications } from 'src/modules/applications/models/applications.model';
 import { accessGroups } from 'src/modules/access/groups/models/access-groups.model';
 import { users } from 'src/modules/users/models/users.model';
 
@@ -8,9 +7,6 @@ export const accessMembers = pgTable('access_members', {
   id: uuid('id')
     .primaryKey()
     .default(sql`gen_random_uuid()`),
-  application_id: uuid('application_id')
-    .notNull()
-    .references(() => applications.id, { onDelete: 'cascade' }),
   user_id: uuid('user_id')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
@@ -22,4 +18,4 @@ export const accessMembers = pgTable('access_members', {
   created_by: uuid('created_by'),
 });
 
-export type Application = InferSelectModel<typeof accessMembers>;
+export type AccessMember = InferSelectModel<typeof accessMembers>;
