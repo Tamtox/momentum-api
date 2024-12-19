@@ -1,12 +1,13 @@
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import { CustomError } from 'src/common/errors/customError';
+import { CustomError } from 'src/common/errors/custom_error';
 import { CONNECTION_POOL, DRIZZLE_POOL } from 'src/database/database.module-definition';
 import { User } from './models/users.model';
-import { CreateUserData, UpdateUserData } from './types/users.types';
+import { CreateUserData, UpdateUserData } from './types/users_repository_data.type';
 import { generateInsertionQuery } from 'src/common/postgresql/query_builders';
 import { RepositoryOptions } from 'src/common/types/repository';
+import { ListUsersDto } from './dtos/users.dto';
 
 @Injectable()
 export class UsersRepositoryService {
@@ -20,7 +21,7 @@ export class UsersRepositoryService {
     if (!id && !email) {
       throw new CustomError('Id or email is required', HttpStatus.BAD_REQUEST, 'Validation error');
     }
-    let query = `SELECT * FROM users WHERE application_id = $1`;
+    let query = `SELECT * FROM users WHERE 1 = 1`;
     if (id) {
       query += ` AND id = $1`;
     }
@@ -60,7 +61,7 @@ export class UsersRepositoryService {
     }
     const userRes = await this.pg.query(query, vals);
     const user = userRes.rows[0];
-    return user;
+    return user as User;
   }
   // #endregion
   // #region Create Users -------------------------------------------------------------------------------------------------------------------------
@@ -150,7 +151,7 @@ export class UsersRepositoryService {
   }
   // #endregion
   // #region List Users --------------------------------------------------------------------------------------------------------------------------
-  async listUsers(options: RepositoryOptions<User>) {
+  async listUsers(queries: ListUsersDto, options: RepositoryOptions<User>) {
     const serviceName = 'listUsersRepository';
     let query = `SELECT`;
     if (options?.returning) {
@@ -163,6 +164,16 @@ export class UsersRepositoryService {
       query += ` *`;
     }
     query += ` FROM users`;
+    query += ` WHERE 1 = 1`;
+    let index = 1;
+    if (queries.ids) {
+      query += ` AND id = ANY($${index})`;
+      index++;
+    }
+    if (queries.excludedIds) {
+      query += ` AND id != ALL($${index})`;
+      index++;
+    }
     const { rows } = await this.pg.query(query, []);
     return rows as User[];
   }

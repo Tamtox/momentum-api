@@ -1,7 +1,7 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { z } from 'zod';
-import { CustomError } from './customError';
+import { CustomError } from './custom_error';
 
 @Catch()
 export class GlobalExceptionsFilter implements ExceptionFilter {
@@ -11,16 +11,17 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const responseBody: {
       statusCode: number;
+      message?: string;
       type: string;
       timestamp: string;
-      details: any;
+      details?: any;
     } = {
       statusCode: exception instanceof HttpException ? exception.getStatus() : 500,
       type: 'Internal server error',
       timestamp: new Date().toISOString(),
-      details: null,
     };
     if (exception instanceof z.ZodError) {
+      // Validation error
       const errors = exception.errors;
       responseBody.details = {
         errors: errors,
@@ -28,9 +29,8 @@ export class GlobalExceptionsFilter implements ExceptionFilter {
       responseBody.statusCode = HttpStatus.BAD_REQUEST;
       responseBody.type = 'Validation error';
     } else if (exception instanceof CustomError) {
-      responseBody.details = {
-        message: exception.message,
-      };
+      // Custom error
+      responseBody.message = exception.message;
       responseBody.statusCode = exception.statusCode;
       responseBody.type = exception.type;
     }

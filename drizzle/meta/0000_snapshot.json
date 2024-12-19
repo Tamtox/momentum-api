@@ -1,5 +1,5 @@
 {
-  "id": "b65cde72-a8b1-4d02-a2d0-28bb76444fc3",
+  "id": "0a2eebaf-e4c7-4db4-b616-36e778dd5abf",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -14,12 +14,6 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
-        },
-        "application_id": {
-          "name": "application_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
         },
         "user_id": {
           "name": "user_id",
@@ -56,19 +50,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "access_attachments_application_id_applications_id_fk": {
-          "name": "access_attachments_application_id_applications_id_fk",
-          "tableFrom": "access_attachments",
-          "tableTo": "applications",
-          "columnsFrom": [
-            "application_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
         "access_attachments_user_id_users_id_fk": {
           "name": "access_attachments_user_id_users_id_fk",
           "tableFrom": "access_attachments",
@@ -113,12 +94,6 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "application_id": {
-          "name": "application_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
         "policy_id": {
           "name": "policy_id",
           "type": "uuid",
@@ -160,19 +135,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "access_groups_application_id_applications_id_fk": {
-          "name": "access_groups_application_id_applications_id_fk",
-          "tableFrom": "access_groups",
-          "tableTo": "applications",
-          "columnsFrom": [
-            "application_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
         "access_groups_policy_id_access_policies_id_fk": {
           "name": "access_groups_policy_id_access_policies_id_fk",
           "tableFrom": "access_groups",
@@ -203,12 +165,6 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
-        },
-        "application_id": {
-          "name": "application_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
         },
         "user_id": {
           "name": "user_id",
@@ -245,19 +201,6 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "access_members_application_id_applications_id_fk": {
-          "name": "access_members_application_id_applications_id_fk",
-          "tableFrom": "access_members",
-          "tableTo": "applications",
-          "columnsFrom": [
-            "application_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
         "access_members_user_id_users_id_fk": {
           "name": "access_members_user_id_users_id_fk",
           "tableFrom": "access_members",
@@ -302,12 +245,6 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "application_id": {
-          "name": "application_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
         "name": {
           "name": "name",
           "type": "text",
@@ -349,72 +286,6 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "access_policies_application_id_applications_id_fk": {
-          "name": "access_policies_application_id_applications_id_fk",
-          "tableFrom": "access_policies",
-          "tableTo": "applications",
-          "columnsFrom": [
-            "application_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.applications": {
-      "name": "applications",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "created_by": {
-          "name": "created_by",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
@@ -432,12 +303,6 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
-        },
-        "application_id": {
-          "name": "application_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
         },
         "email": {
           "name": "email",
@@ -467,7 +332,7 @@
           "name": "is_verified",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": false
         },
         "verification_code": {
@@ -476,18 +341,24 @@
           "primaryKey": false,
           "notNull": true
         },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "now()"
         },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "default": "now()"
         },
         "created_by": {
@@ -498,21 +369,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "users_application_id_applications_id_fk": {
-          "name": "users_application_id_applications_id_fk",
-          "tableFrom": "users",
-          "tableTo": "applications",
-          "columnsFrom": [
-            "application_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},

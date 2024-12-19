@@ -1,4 +1,4 @@
-import { Admin } from 'src/modules/admins/models/admins.models';
+import { Admin } from 'src/modules/admins/models/admins.model';
 import { User } from 'src/modules/users/models/users.model';
 
 export type RequestProcessOptionsParams = {

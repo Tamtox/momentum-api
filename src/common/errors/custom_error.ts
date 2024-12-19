@@ -1,6 +1,11 @@
 export const ERROR_IMPORTANCE = Array.from({ length: 10 }, (_, i) => i + 1);
 export type ErrorImportance = (typeof ERROR_IMPORTANCE)[number];
-export type CustomErrorType = 'Internal server error' | 'Validation error' | 'Custom error';
+export type CustomErrorType =
+  | 'Internal server error'
+  | 'Validation error'
+  | 'Custom error'
+  | 'Authorization error'
+  | 'Authentication error';
 export class CustomError extends Error {
   statusCode: number;
   level: ErrorImportance;

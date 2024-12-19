@@ -35,6 +35,7 @@ export const createUserValidationSchema = extendApi(
       middleName: zodCreateStringValidator('Middle name', { minLength: STRING_MIN, maxLength: STRING_MAX }).optional(),
       familyName: zodCreateStringValidator('Family name', { minLength: STRING_MIN, maxLength: STRING_MAX }).optional(),
       isVerified: zodCreateBooleanValidator('Is verified').optional(),
+      isDisabled: zodCreateBooleanValidator('Is disabled').optional(),
       verificationCode: zodCreateStringValidator('Verification code', {
         minLength: VERIFICATION_CODE_MIN,
         maxLength: VERIFICATION_CODE_MAX,
@@ -57,7 +58,6 @@ export class CreateUserDto extends createZodDto(createUserValidationSchema) {}
 export const updateUserValidationSchema = extendApi(
   z.object(
     {
-      id: zodCreateStringValidator('Id', { isUUID: true }),
       email: zodCreateStringValidator('Email', {
         minLength: EMAIL_MIN,
         maxLength: EMAIL_MAX,
