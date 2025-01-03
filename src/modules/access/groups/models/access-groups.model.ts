@@ -1,8 +1,9 @@
 import { pgTable, text, uuid, timestamp } from 'drizzle-orm/pg-core';
 import { sql, InferSelectModel } from 'drizzle-orm';
 import { accessPolicies } from 'src/modules/access/policies/models/access-policies.model';
+import { TABLE_NAMES } from 'src/common/database/table_names';
 
-export const accessGroups = pgTable('access_groups', {
+export const accessGroups = pgTable(TABLE_NAMES.access_groups, {
   id: uuid('id')
     .primaryKey()
     .default(sql`gen_random_uuid()`),

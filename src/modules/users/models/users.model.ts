@@ -2,8 +2,9 @@ import { pgTable, text, uuid, timestamp, boolean } from 'drizzle-orm/pg-core';
 import { sql, InferSelectModel } from 'drizzle-orm';
 import { ApiProperty } from '@nestjs/swagger';
 import { USER_TYPES, UserType } from '../constants/users.constants';
+import { TABLE_NAMES } from 'src/common/database/table_names';
 
-export const users = pgTable('users', {
+export const users = pgTable(TABLE_NAMES.users, {
   id: uuid('id')
     .primaryKey()
     .default(sql`gen_random_uuid()`),
@@ -21,23 +22,19 @@ export const users = pgTable('users', {
   last_online_at: timestamp('last_online_at'),
   created_by: uuid('created_by'),
 });
-
 export type User = InferSelectModel<typeof users>;
+export const USER_COLS = Object.keys(users) as readonly (keyof User)[];
+
 export class UserDto {
   @ApiProperty({ type: 'string', format: 'uuid', description: 'User ID' })
   id: string;
   @ApiProperty({ type: 'string', format: 'email', description: 'User email' })
   email: string;
-  @ApiProperty({ type: 'string', description: 'User username' })
+  @ApiProperty({ type: 'string', description: 'User name' })
   username: string;
   @ApiProperty({ type: 'string', format: 'password', description: 'User password' })
   password: string;
-  @ApiProperty({
-    type: 'string',
-    format: 'password',
-    description: 'Temporary password for first time login',
-    nullable: true,
-  })
+  @ApiProperty({ type: 'string', format: 'password', description: 'Password during password reset.', nullable: true })
   temporary_password: string | null;
   @ApiProperty({ type: 'boolean', description: 'Is user verified' })
   is_verified: boolean;
@@ -58,9 +55,8 @@ export class UserDto {
   @ApiProperty({
     type: 'string',
     format: 'uuid',
-    description: 'Id of the admin or user who created this user. If null, it means the user was created by the system.',
+    description: 'Id of the admin or user who created this user. Null value means the user was created by the system.',
     nullable: true,
   })
   created_by: string | null;
 }
-export const USER_COLS = Object.keys(users) as readonly (keyof User)[];

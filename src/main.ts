@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { GlobalExceptionsFilter } from './common/errors/exception_filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import 'dotenv/config';
+import { patchNestJsSwagger } from 'nestjs-zod';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,7 @@ async function bootstrap() {
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
+  patchNestJsSwagger();
   app.useGlobalFilters(new GlobalExceptionsFilter(app.get(HttpAdapterHost)));
   await app.listen(process.env.SERVER_PORT || 3000);
 }

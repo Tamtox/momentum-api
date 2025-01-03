@@ -6,8 +6,10 @@ export enum UserActions {
   GET_USERS = 'users.get_users',
 }
 
-export const CHECK_USER_EXISTS_ACTIONS = [UserActions.GET_USER] as const;
-export const CREATE_USER_ACTIONS = [UserActions.GET_USER, UserActions.CREATE_USER] as const;
-export const UPDATE_USER_ACTIONS = [UserActions.GET_USER, UserActions.UPDATE_USER] as const;
-export const DELETE_USER_ACTIONS = [UserActions.GET_USER, UserActions.DELETE_USER] as const;
-export const LIST_USERS_ACTIONS = [UserActions.GET_USERS] as const;
+export const USER_ROUTE_ACTIONS = {
+  getUser: [UserActions.GET_USER],
+  createUser: [UserActions.GET_USER, UserActions.CREATE_USER],
+  updateUser: [UserActions.GET_USER, UserActions.UPDATE_USER],
+  deleteUser: [UserActions.GET_USER, UserActions.DELETE_USER],
+  listUsers: [UserActions.GET_USERS],
+} as const;
