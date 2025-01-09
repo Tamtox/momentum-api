@@ -36,7 +36,6 @@ export class UsersController {
     const user = await this.usersService.getUserProcess(id, options);
     return res.status(HttpStatus.OK).json({ user });
   }
-  // #endregion
   // #region Create User ----------------------------------------------------------------------------------------------------------------
   @ApiResponse({ status: HttpStatus.CREATED, description: 'Creates new user.', type: UserDto })
   @Post()
@@ -46,7 +45,6 @@ export class UsersController {
     const user = await this.usersService.createUserProcess(body, options);
     return res.status(HttpStatus.CREATED).json({ user });
   }
-  // #endregion
   // #region Update User ----------------------------------------------------------------------------------------------------------------
   @ApiResponse({ status: HttpStatus.OK, description: 'Updates existing user.', type: UserDto })
   // @AuthorizationActions(...USER_ROUTE_ACTIONS.updateUser)
@@ -61,7 +59,6 @@ export class UsersController {
     const user = await this.usersService.updateUserProcess(id, body, options);
     return res.status(HttpStatus.OK).json({ user });
   }
-  // #endregion
   // #region Delete User ----------------------------------------------------------------------------------------------------------------
   @ApiResponse({ status: HttpStatus.OK, description: 'Deletes user.' })
   @Delete(':id')
@@ -83,5 +80,4 @@ export class UsersController {
     const users = await this.usersService.listUsersProcess(queries, options);
     return users;
   }
-  // #endregion
 }
