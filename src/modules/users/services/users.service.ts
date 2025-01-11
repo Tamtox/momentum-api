@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { CustomError } from 'src/common/errors/custom_error';
 import { RequestProcessOptions } from 'src/common/types/request_process';
 import { CreateUserDto, ListUsersDto, UpdateUserDto } from '../dtos/users.dto';
-import { CreateUserData } from '../types/users_repository_data.type';
+import { CreateUserData, UpdateUserData } from '../types/users_repository_data.type';
 import { UsersRepositoryService } from './users-repository.service';
 import { generateVerificationCode } from 'src/common/utils/generate_verification_code';
 import { VERIFICATION_CODE_MIN } from 'src/common/constants/constants';
@@ -98,6 +98,11 @@ export class UsersService {
     if (body.email && body.email !== existingUser.email) {
       await this.checkUserExists(null, body.email);
     }
+    const userData: UpdateUserData = {
+      ...existingUser,
+    };
+    const updatedUser = await this.usersRepository.updateUser(userData, { returning: '*' });
+    return updatedUser;
   }
   // #endregion
   // # region Disable User -----------------------------------------------------------------------------------------------------------------------

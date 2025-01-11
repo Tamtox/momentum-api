@@ -1,29 +1,32 @@
-name: momentum
 services:
+  api:
+    build: .
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env
+    environment:
+      - HOST=0.0.0.0
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+
   postgres:
-    container_name: postgres-momentum
-    image: postgres:16.5
+    image: postgres
     ports:
       - "5432:5432"
-    volumes:
-      - /data/postgres:/data/postgres
     env_file:
       - docker.env
-    networks:
-      - postgres
-  pgadmin:
-    links:
-      - postgres:postgres
-    container_name: pgadmin-momentum
-    image: dpage/pgadmin4:8.6
-    ports:
-      - "8080:80"
     volumes:
-      - /data/pgadmin:/root/.pgadmin
-    env_file:
-      - docker.env
+      - postgres_data:/var/lib/postgresql/data
     networks:
-      - postgres
+      - app-network
+    restart: unless-stopped
+
 networks:
-  postgres:
+  app-network:
     driver: bridge
+
+volumes:
+  postgres_data:

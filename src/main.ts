@@ -17,6 +17,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, documentFactory);
   patchNestJsSwagger();
   app.useGlobalFilters(new GlobalExceptionsFilter(app.get(HttpAdapterHost)));
+  // Don't forget to add '0.0.0.0' host when deploying via Docker
   await app.listen(process.env.SERVER_PORT || 3000);
 }
 bootstrap();
