@@ -5,28 +5,8 @@ services:
       - "3001:3001"
     env_file:
       - .env
+    command: sh -c "npm run drizzle:generate && npm run drizzle:migrate && npm run docker:start:prod"
     environment:
       - HOST=0.0.0.0
     networks:
       - app-network
-    depends_on:
-      - postgres
-
-  postgres:
-    image: postgres
-    ports:
-      - "5432:5432"
-    env_file:
-      - docker.env
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - app-network
-    restart: unless-stopped
-
-networks:
-  app-network:
-    driver: bridge
-
-volumes:
-  postgres_data:
