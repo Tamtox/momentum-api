@@ -1,13 +1,13 @@
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import { CustomError } from 'src/common/errors/custom_error';
+import { CustomError } from 'src/common/errors/custom-error';
 import { CONNECTION_POOL, DRIZZLE_POOL } from 'src/database/database.module-definition';
 import { User } from '../models/users.model';
 import { CreateUserData, UpdateUserData } from '../types/users_repository_data.type';
 import { RepositoryOptions } from 'src/common/types/repository';
 import { ListUsersDto } from '../dtos/list-users.dto';
-import { TABLE_NAMES } from 'src/common/database/table_names';
+import { TABLE_NAMES } from 'src/common/database/table-names';
 
 @Injectable()
 export class UsersRepositoryService {
@@ -168,6 +168,22 @@ export class UsersRepositoryService {
     }
     if (queries.excludedIds) {
       query += ` AND id != ALL($${index})`;
+      index++;
+    }
+    if (queries.createdAtStart) {
+      query += ` AND created_at >= $${index}`;
+      index++;
+    }
+    if (queries.createdAtEnd) {
+      query += ` AND created_at <= $${index}`;
+      index++;
+    }
+    if (queries.updatedAtStart) {
+      query += ` AND updated_at >= $${index}`;
+      index++;
+    }
+    if (queries.updatedAtEnd) {
+      query += ` AND updated_at <= $${index}`;
       index++;
     }
     const { rows } = await this.pg.query(query, []);

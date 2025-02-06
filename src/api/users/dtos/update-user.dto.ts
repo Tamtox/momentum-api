@@ -9,7 +9,7 @@ import {
   VERIFICATION_CODE_MAX,
   VERIFICATION_CODE_MIN,
 } from 'src/common/constants/constants';
-import { zodCreateBooleanValidator, zodCreateStringValidator } from 'src/common/validation/zod/validatorFunctions';
+import { zodCreateBooleanValidator, zodCreateStringValidator } from 'src/common/validation/zod/validator-functions';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 

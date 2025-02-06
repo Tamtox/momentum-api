@@ -1,6 +1,6 @@
 import { pgTable, text, uuid, timestamp } from 'drizzle-orm/pg-core';
 import { sql, InferSelectModel } from 'drizzle-orm';
-import { TABLE_NAMES } from 'src/common/database/table_names';
+import { TABLE_NAMES } from 'src/common/database/table-names';
 
 export const admins = pgTable(TABLE_NAMES.admins, {
   id: uuid('id')

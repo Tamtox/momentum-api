@@ -1,9 +1,9 @@
 import { Injectable, CanActivate, ExecutionContext, HttpStatus } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { ACTION_KEY } from '../decorators/authorization_action.decorator';
-import { User } from 'src/modules/users/models/users.model';
-import { Admin } from 'src/modules/admins/models/admins.model';
-import { CustomError } from '../errors/custom_error';
+import { ACTION_KEY } from '../decorators/authorization-action.decorator';
+import { User } from 'src/api/users/models/users.model';
+import { Admin } from 'src/api/admins/models/admins.model';
+import { CustomError } from '../errors/custom-error';
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {

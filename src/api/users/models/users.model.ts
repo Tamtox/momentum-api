@@ -2,7 +2,7 @@ import { pgTable, text, uuid, timestamp, boolean } from 'drizzle-orm/pg-core';
 import { sql, InferSelectModel } from 'drizzle-orm';
 import { ApiProperty } from '@nestjs/swagger';
 import { USER_TYPES, UserType } from '../constants/users.constants';
-import { TABLE_NAMES } from 'src/common/database/table_names';
+import { TABLE_NAMES } from 'src/common/database/table-names';
 
 export const users = pgTable(TABLE_NAMES.users, {
   id: uuid('id')

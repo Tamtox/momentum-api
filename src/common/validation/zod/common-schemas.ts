@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { zodCreateNumberValidator } from './validatorFunctions';
+import { zodCreateNumberValidator } from './validator-functions';
 import { zodStringToNumberPreprocessor } from './preprocessors';
 
 export const zodPaginationValidationSchema = z.object({

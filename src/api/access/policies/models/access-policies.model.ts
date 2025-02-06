@@ -1,7 +1,7 @@
 import { pgTable, text, uuid, timestamp } from 'drizzle-orm/pg-core';
 import { sql, InferSelectModel } from 'drizzle-orm';
 import { ApiProperty } from '@nestjs/swagger';
-import { TABLE_NAMES } from 'src/common/database/table_names';
+import { TABLE_NAMES } from 'src/common/database/table-names';
 
 export const accessPolicies = pgTable(TABLE_NAMES.access_policies, {
   id: uuid('id')

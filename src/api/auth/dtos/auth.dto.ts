@@ -1,5 +1,5 @@
 import { EMAIL_MAX, EMAIL_MIN, PASS_MAX, PASS_MIN, STRING_MAX, STRING_MIN } from 'src/common/constants/constants';
-import { zodCreatePasswordValidator, zodCreateStringValidator } from 'src/common/validation/zod/validatorFunctions';
+import { zodCreatePasswordValidator, zodCreateStringValidator } from 'src/common/validation/zod/validator-functions';
 import { z } from 'zod';
 
 // #region Sign Up

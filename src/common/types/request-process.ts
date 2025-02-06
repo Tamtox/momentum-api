@@ -1,7 +1,6 @@
-import { boolean } from 'drizzle-orm/mysql-core';
 import { Locals } from 'express';
-import { Admin } from 'src/modules/admins/models/admins.model';
-import { User } from 'src/modules/users/models/users.model';
+import { Admin } from 'src/api/admins/models/admins.model';
+import { User } from 'src/api/users/models/users.model';
 
 export type RequestProcessOptionsParams = {
   skipAccessCheck?: boolean;

@@ -1,8 +1,8 @@
 import { pgTable, uuid, timestamp } from 'drizzle-orm/pg-core';
 import { sql, InferSelectModel } from 'drizzle-orm';
-import { accessGroups } from 'src/modules/access/groups/models/access-groups.model';
-import { users } from 'src/modules/users/models/users.model';
-import { TABLE_NAMES } from 'src/common/database/table_names';
+import { accessGroups } from 'src/api/access/groups/models/access-groups.model';
+import { users } from 'src/api/users/models/users.model';
+import { TABLE_NAMES } from 'src/common/database/table-names';
 
 export const accessMembers = pgTable(TABLE_NAMES.access_members, {
   id: uuid('id')

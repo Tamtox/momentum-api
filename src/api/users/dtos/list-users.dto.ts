@@ -1,5 +1,5 @@
-import { zodPaginationValidationSchema } from 'src/common/validation/zod/commonSchemas';
-import { zodCreateDateValidator, zodCreateStringValidator } from 'src/common/validation/zod/validatorFunctions';
+import { zodPaginationValidationSchema } from 'src/common/validation/zod/common-schemas';
+import { zodCreateDateValidator, zodCreateStringValidator } from 'src/common/validation/zod/validator-functions';
 import { z } from 'zod';
 import { zodStringToStringArrayPreprocessor } from 'src/common/validation/zod/preprocessors';
 

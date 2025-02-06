@@ -1,9 +1,9 @@
 import { Controller, HttpStatus, Injectable } from '@nestjs/common';
-import { CustomError } from 'src/common/errors/custom_error';
-import { RequestProcessOptions } from 'src/common/types/request_process';
+import { CustomError } from 'src/common/errors/custom-error';
+import { RequestProcessOptions } from 'src/common/types/request-process';
 import { CreateUserData, UpdateUserData } from '../types/users_repository_data.type';
 import { UsersRepositoryService } from './users-repository.service';
-import { generateVerificationCode } from 'src/common/utils/generate_verification_code';
+import { generateVerificationCode } from 'src/common/utils/generate-verification_code';
 import { VERIFICATION_CODE_MIN } from 'src/common/constants/constants';
 import { User, USER_COLS } from '../models/users.model';
 import { CreateUserDto } from '../dtos/create-user.dto';

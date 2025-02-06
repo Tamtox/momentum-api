@@ -14,7 +14,7 @@ import {
   zodCreateDateValidator,
   zodCreateEnumValidator,
   zodCreateStringValidator,
-} from 'src/common/validation/zod/validatorFunctions';
+} from 'src/common/validation/zod/validator-functions';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { USER_TYPES } from '../constants/users.constants';
