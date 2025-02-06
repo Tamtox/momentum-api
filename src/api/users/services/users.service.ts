@@ -1,12 +1,14 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { Controller, HttpStatus, Injectable } from '@nestjs/common';
 import { CustomError } from 'src/common/errors/custom_error';
 import { RequestProcessOptions } from 'src/common/types/request_process';
-import { CreateUserDto, ListUsersDto, UpdateUserDto } from '../dtos/users.dto';
 import { CreateUserData, UpdateUserData } from '../types/users_repository_data.type';
 import { UsersRepositoryService } from './users-repository.service';
 import { generateVerificationCode } from 'src/common/utils/generate_verification_code';
 import { VERIFICATION_CODE_MIN } from 'src/common/constants/constants';
 import { User, USER_COLS } from '../models/users.model';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
+import { ListUsersDto } from '../dtos/list-users.dto';
 
 @Injectable()
 export class UsersService {

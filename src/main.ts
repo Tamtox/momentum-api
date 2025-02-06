@@ -2,8 +2,8 @@ import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { GlobalExceptionsFilter } from './common/errors/exception_filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import 'dotenv/config';
 import { patchNestJsSwagger } from 'nestjs-zod';
+import 'dotenv/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

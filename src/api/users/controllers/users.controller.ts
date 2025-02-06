@@ -1,14 +1,6 @@
 import { Body, Controller, Delete, Get, HttpStatus, Param, Patch, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { API_PREFIX } from 'src/common/constants/constants';
-import {
-  CreateUserDto,
-  createUserValidationSchema,
-  ListUsersDto,
-  listUsersValidationSchema,
-  UpdateUserDto,
-  updateUserValidationSchema,
-} from '../dtos/users.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { setRequestProcessOptions } from 'src/common/types/request_process';
@@ -18,6 +10,9 @@ import { AuthorizationGuard } from 'src/common/guards/authorization.guard';
 import { AuthenticationGuard } from 'src/common/guards/authentication.guard';
 import { ZodValidationPipe } from 'src/common/pipes/zod_validation.pipe';
 import { UserDto } from '../models/users.model';
+import { createUserValidationSchema, CreateUserDto } from '../dtos/create-user.dto';
+import { listUsersValidationSchema, ListUsersDto } from '../dtos/list-users.dto';
+import { updateUserValidationSchema, UpdateUserDto } from '../dtos/update-user.dto';
 
 const CONTROLLER_NAME = 'users' as const;
 const TAGS = [CONTROLLER_NAME] as const;

@@ -6,7 +6,7 @@ import { CONNECTION_POOL, DRIZZLE_POOL } from 'src/database/database.module-defi
 import { User } from '../models/users.model';
 import { CreateUserData, UpdateUserData } from '../types/users_repository_data.type';
 import { RepositoryOptions } from 'src/common/types/repository';
-import { ListUsersDto } from '../dtos/users.dto';
+import { ListUsersDto } from '../dtos/list-users.dto';
 import { TABLE_NAMES } from 'src/common/database/table_names';
 
 @Injectable()

@@ -10,7 +10,7 @@ export const zodStringToNumberPreprocessor = (value: any): number | null => {
   }
 };
 
-export const zodQueryArrayToStringArrayPreprocessor = (value: any): string[] | null => {
+export const zodStringToStringArrayPreprocessor = (value: any): string[] | null => {
   // Turns query string array separated by commas into an array of strings
   if (typeof value === 'string') {
     return value.split(',');
@@ -19,7 +19,7 @@ export const zodQueryArrayToStringArrayPreprocessor = (value: any): string[] | n
   }
 };
 
-export const zodQueryArrayToNumberArrayPreprocessor = (value: any): number[] | null => {
+export const zodStringToNumberArrayPreprocessor = (value: any): number[] | null => {
   // Turns query string array separated by commas into an array of numbers
   if (typeof value === 'string') {
     const values = value.split(',');
