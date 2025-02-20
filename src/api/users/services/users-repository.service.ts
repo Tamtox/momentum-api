@@ -186,6 +186,15 @@ export class UsersRepositoryService {
       query += ` AND updated_at <= $${index}`;
       index++;
     }
+    if (queries.createdBy) {
+      query += ` AND created_by = ANY($${index})`;
+      index++;
+    }
+    if (queries.excludeCreatedBy) {
+      query += ` AND created_by != ALL($${index})`;
+      index++;
+    }
+    query += `;`;
     const { rows } = await this.pg.query(query, []);
     return rows as User[];
   }

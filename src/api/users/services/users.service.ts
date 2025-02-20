@@ -53,6 +53,7 @@ export class UsersService {
     const admin = options.admin;
     // Check access
     if (!admin && options.skipAccessCheck !== true) {
+      throw new CustomError('Unauthorized!', HttpStatus.UNAUTHORIZED, 'Authorization error');
       // Check if user has access to create user
     }
     // Check if the user already exists
@@ -120,11 +121,11 @@ export class UsersService {
       throw new CustomError('User does not exist', HttpStatus.NOT_FOUND, 'Validation error');
     }
     // Step 2: Delete the user
-    if (admin || existingUser?.id === user.id) {
-      await this.usersRepository.deleteUser(id);
-    } else {
+    if (admin === undefined && existingUser?.id !== user.id) {
       throw new CustomError('Unauthorized!', HttpStatus.UNAUTHORIZED, 'Authorization error');
     }
+    await this.usersRepository.deleteUser(user.id);
+    return user;
   }
   // #endregion
   // #region List Users -------------------------------------------------------------------------------------------------------------------------

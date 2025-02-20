@@ -1,4 +1,4 @@
-export const API_PREFIX = 'api/v1' as const;
+export const API_PREFIX = 'api' as const;
 
 export const STRING_MIN = 1 as const;
 export const STRING_SHORT_MAX = 100 as const;
